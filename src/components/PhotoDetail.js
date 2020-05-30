@@ -8,9 +8,9 @@ import axios from 'axios';
 
 const PhotoDetail = ({title, imageUrl, imageId}) => {
   const [comments, setComments] = useState(null);
-  const [commentsOn, putCommentsOn] = useState(false);
+  const [clicked, clickIt] = useState(false);
 
-  const _searchComment = async () => {
+  const getComments = async () => {
     try {
       let response = await axios.get(
         `https://api.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=6e8a597cb502b7b95dbd46a46e25db8d&photo_id=${imageId}&format=json&nojsoncallback=1`,
@@ -51,13 +51,13 @@ const PhotoDetail = ({title, imageUrl, imageId}) => {
       <CardSection>
         <Button
           onPress={() => {
-            _searchComment();
-            putCommentsOn(commentsOn => !commentsOn);
+            getComments();
+            clickIt(clicked => !clicked);
           }}>
-          {!commentsOn ? 'Show comments' : 'Hide comments'}
+          <Text>{!clicked ? 'Show' : 'Hide'}</Text>
         </Button>
       </CardSection>
-      {commentsOn &&
+      {clicked &&
         comments &&
         comments.map((comment, index) => {
           return (
@@ -66,7 +66,6 @@ const PhotoDetail = ({title, imageUrl, imageId}) => {
                 title={comment.realname}
                 description={comment._content}
                 style={{flex: 1}}
-                left={props => <List.Icon {...props} icon="comment" />}
               />
             </CardSection>
           );
