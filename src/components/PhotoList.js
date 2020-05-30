@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import {View, FlatList, Text} from 'react-native';
 import PhotoDetail from './PhotoDetail';
-import {Text} from 'react-native';
 const PhotoList = ({route}) => {
   const [photos, setPhotos] = useState([]);
 
@@ -29,16 +29,24 @@ const PhotoList = ({route}) => {
       </>
     );
   }
-  return photos.map(photo => (
-    <PhotoDetail
-      key={photo.title}
-      title={photo.title}
-      imageUrl={`https://farm${photo.farm}.staticflickr.com/${photo.server}/${
-        photo.id
-      }_${photo.secret}.jpg`}
-      imageId={photo.id}
-    />
-  ));
+
+  return (
+    <View style={{flex: 1}}>
+      <FlatList
+        data={photos}
+        renderItem={({item}) => (
+          <PhotoDetail
+            key={item.key}
+            title={item.title}
+            imageId={item.id}
+            imageUrl={`https://farm${item.farm}.staticflickr.com/${
+              item.server
+            }/${item.id}_${item.secret}.jpg`}
+          />
+        )}
+      />
+    </View>
+  );
 };
 
 export default PhotoList;

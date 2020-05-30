@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text} from 'react-native';
+import {View, FlatList, Text} from 'react-native';
 import axios from 'axios';
 import AlbumDetail from './AlbumDetail';
 
@@ -28,13 +28,21 @@ const AlbumList = ({navigation}) => {
       </>
     );
   }
-  return albums.map(album => (
-    <AlbumDetail
-      navigation={navigation}
-      key={album.id}
-      title={album.title._content}
-      albumId={album.id}
-    />
-  ));
+
+  return (
+    <View style={{flex: 1}}>
+      <FlatList
+        data={albums}
+        renderItem={({item}) => (
+          <AlbumDetail
+            key={item.id}
+            title={item.title._content}
+            albumId={item.id}
+            navigation={navigation}
+          />
+        )}
+      />
+    </View>
+  );
 };
 export default AlbumList;
