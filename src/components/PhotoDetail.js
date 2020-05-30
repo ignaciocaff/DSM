@@ -5,6 +5,7 @@ import CardSection from './CardSection';
 import Button from './Button';
 import {List} from 'react-native-paper';
 import axios from 'axios';
+import {API, KEY, COMMENTS} from '../constants/constants';
 
 const PhotoDetail = ({title, imageUrl, imageId}) => {
   const [comments, setComments] = useState(null);
@@ -12,10 +13,10 @@ const PhotoDetail = ({title, imageUrl, imageId}) => {
 
   const getComments = async () => {
     try {
-      let response = await axios.get(
-        `https://api.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=6e8a597cb502b7b95dbd46a46e25db8d&photo_id=${imageId}&format=json&nojsoncallback=1`,
+      const {data} = await axios.get(
+        `${API}${COMMENTS}&api_key=${KEY}&photo_id=${imageId}&format=json&nojsoncallback=1`,
       );
-      setComments(response.data.comments.comment);
+      setComments(data.comments.comment);
     } catch (err) {
       console.log(err);
     }
@@ -54,7 +55,7 @@ const PhotoDetail = ({title, imageUrl, imageId}) => {
             getComments();
             clickIt(clicked => !clicked);
           }}>
-          <Text>{!clicked ? 'Show' : 'Hide'}</Text>
+          <Text>Comments</Text>
         </Button>
       </CardSection>
       {clicked &&

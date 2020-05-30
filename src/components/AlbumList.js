@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {View, FlatList, Text} from 'react-native';
 import axios from 'axios';
 import AlbumDetail from './AlbumDetail';
+import {ActivityIndicator} from 'react-native';
+import {API, KEY, USER, ALBUMS} from '../constants/constants';
 
 const AlbumList = ({navigation}) => {
   const [albums, setAlbums] = useState([]);
@@ -10,7 +12,7 @@ const AlbumList = ({navigation}) => {
     const dataObject = async () => {
       try {
         const {data} = await axios.get(
-          'https://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=6e8a597cb502b7b95dbd46a46e25db8d&user_id=137290658%40N08&format=json&nojsoncallback=1',
+          `${API}${ALBUMS}&api_key=${KEY}&user_id=${USER}&format=json&nojsoncallback=1`,
         );
         console.log(data);
         setAlbums(data.photosets.photoset);
@@ -24,7 +26,9 @@ const AlbumList = ({navigation}) => {
   if (!albums.length) {
     return (
       <>
-        <Text>Loading...</Text>
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" />
+        </View>
       </>
     );
   }
@@ -44,5 +48,17 @@ const AlbumList = ({navigation}) => {
       />
     </View>
   );
+};
+
+const styles = {
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 };
 export default AlbumList;

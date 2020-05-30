@@ -2,6 +2,9 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {View, FlatList, Text} from 'react-native';
 import PhotoDetail from './PhotoDetail';
+import {ActivityIndicator} from 'react-native';
+import {API, KEY, USER, IMAGES} from '../constants/constants';
+
 const PhotoList = ({route}) => {
   const [photos, setPhotos] = useState([]);
 
@@ -9,9 +12,9 @@ const PhotoList = ({route}) => {
     const dataObject = async () => {
       try {
         const {data} = await axios.get(
-          `https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=6e8a597cb502b7b95dbd46a46e25db8d&photoset_id=${
+          `${API}${IMAGES}&api_key=${KEY}&photoset_id=${
             route.params.albumId
-          }&user_id=137290658%40N08&format=json&nojsoncallback=1`,
+          }&user_id=${USER}&format=json&nojsoncallback=1`,
         );
         console.log(data);
         setPhotos(data.photoset.photo);
@@ -25,7 +28,9 @@ const PhotoList = ({route}) => {
   if (!photos.length) {
     return (
       <>
-        <Text>Loading...</Text>
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" />
+        </View>
       </>
     );
   }
@@ -48,5 +53,15 @@ const PhotoList = ({route}) => {
     </View>
   );
 };
-
+const styles = {
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+};
 export default PhotoList;
